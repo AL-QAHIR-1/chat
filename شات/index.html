@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>شات سري</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Courier New', monospace;
+      margin: 0;
+      padding: 20px;
+      background: #000;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h2 {
+      color: #bb00ff;
+      text-shadow: 0 0 10px #bb00ff;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    input, button {
+      width: 100%;
+      max-width: 400px;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    input {
+      background: #000;
+      color: #fff;
+      border: 2px solid #bb00ff;
+    }
+
+    button {
+      background: #bb00ff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 0 10px #bb00ff, 0 0 20px #bb00ff88;
+    }
+
+    #chat {
+      background: #111;
+      padding: 10px;
+      border-radius: 10px;
+      height: 300px;
+      width: 100%;
+      max-width: 400px;
+      overflow-y: auto;
+      border: 2px solid #bb00ff;
+      box-shadow: 0 0 15px #bb00ff88;
+      margin-bottom: 10px;
+    }
+
+    .msg {
+      margin: 5px 0;
+      padding: 8px 12px;
+      background: #330033;
+      color: #bb00ff;
+      border-left: 3px solid #bb00ff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px #bb00ff55;
+    }
+
+    #loginPage, #chatPage {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #loginError {
+      color: red;
+      text-align: center;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- صفحة تسجيل الدخول -->
+<div id="loginPage">
+  <h2>🔒 الدخول إلى الشات السري</h2>
+  <input type="password" id="secretCode" placeholder="ادخل الكود السري">
+  <button onclick="checkCode()">دخول</button>
+  <p id="loginError"></p>
+</div>
+
+<!-- صفحة الشات -->
+<div id="chatPage" class="hidden">
+  <h2>💬 شات الأشباح</h2>
+  <div id="chat"></div>
+  <input id="msg" placeholder="اكتب رسالتك هنا...">
+  <button onclick="sendMessage()">إرسال</button>
+</div>
+
+<script>
+  // بيانات Firebase – غيّرهم لما تجهز المشروع
+  const firebaseConfig = {
+    apiKey: "xxxx",
+    authDomain: "xxxx.firebaseapp.com",
+    projectId: "xxxx",
+    storageBucket: "xxxx.appspot.com",
+    messagingSenderId: "xxxx",
+    appId: "xxxx"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  const secretKey = "7112024";
+
+  function checkCode() {
+    const code = document.getElementById("secretCode").value;
+    const error = document.getElementById("loginError");
+    if (code === secretKey) {
+      document.getElementById("loginPage").classList.add("hidden");
+      document.getElementById("chatPage").classList.remove("hidden");
+    } else {
+      error.innerText = "❌ رمز غير صحيح!";
+    }
+  }
+
+  function sendMessage() {
+    const text = document.getElementById('msg').value;
+    if (text.trim()) {
+      db.collection("messages").add({
+        text,
+        time: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      document.getElementById('msg').value = "";
+    }
+  }
+
+  db.collection("messages")
+    .orderBy("time")
+    .onSnapshot(snapshot => {
+      const chat = document.getElementById('chat');
+      chat.innerHTML = "";
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        chat.innerHTML += `<div class="msg">${data.text}</div>`;
+      });
+      chat.scrollTop = chat.scrollHeight;
+    });
+</script>
+
+</body>
+</html>
