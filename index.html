@@ -158,6 +158,27 @@
       });
       chat.scrollTop = chat.scrollHeight;
     });
+  // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDd6WPDf3RBNWPkxtM6y32mrO4yVD6DD54",
+  authDomain: "chat-f62b6.firebaseapp.com",
+  projectId: "chat-f62b6",
+  storageBucket: "chat-f62b6.firebasestorage.app",
+  messagingSenderId: "1047922412786",
+  appId: "1:1047922412786:web:36738c6866739adc37946b",
+  measurementId: "G-E63QB8XD5E"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 </script>
 
 </body>
