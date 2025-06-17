@@ -119,6 +119,11 @@
   background: rgba(255,255,255,0.1);
   color: red;
 }
+    #chatMessages {
+  max-height: calc(100vh - 150px); /* حسب طول الهيدر والانبوت */
+  overflow-y: auto;
+}
+
   </style>
 </head>
 <body>
@@ -251,6 +256,10 @@
       sendMessage();         // تنفّذ دالة إرسال الرسالة
     }
   });
+window.addEventListener('resize', () => {
+  const chatInput = document.getElementById("messageInput");
+  chatInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+});
 
 
   </script>
