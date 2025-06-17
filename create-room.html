@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>إنشاء غرفة - الشات المرعب</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/parse@3.4.4/dist/parse.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Cairo', sans-serif;
+      background: url('https://img.freepik.com/free-vector/frightening-halloween-realistic-background_33099-1052.jpg?ga=GA1.1.1061153082.1742643877&semt=ais_hybrid&w=740') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-shadow: 1px 1px 3px black;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 30px;
+      color: #6e0303;
+      text-shadow: 2px 2px 6px #000;
+    }
+
+    .container {
+    background: rgb(0 0 0);
+    padding: 36px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px 4px #ff0000;
+    width: 56%;
+    max-width: 380px;
+    }
+
+    input {
+      box-shadow: 0 0 20px #e80707;
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+    }
+
+    button {
+      width: 90%;
+      padding: 4px;
+      background-color: #6e0303;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1em;
+      cursor: pointer;
+      box-shadow: 0 0 20px #e80707;
+      transition: 0.3s ease;
+      margin-top: 15px;
+    }
+
+    button:hover {
+    background-color: #7a0505;
+    box-shadow: 0 0 20px #000;
+    }
+    .back-arrow {
+  position: fixed;
+  top: 20px;
+  left: 20px; /* يمين لو RTL */
+  font-size: 28px;
+  color: white;
+  text-decoration: none;
+  background: rgba(0,0,0,0.5);
+  padding: 8px 12px;
+  border-radius: 50%;
+  z-index: 9999;
+  transition: 0.3s;
+}
+.back-arrow:hover {
+  background: rgba(255,255,255,0.1);
+  color: red;
+}
+  </style>
+
+  <script>
+    // تهيئة Parse (Back4App)
+    Parse.initialize("jQt501dTodxFuDNYIWC7TYVVqet3a8SrMxQhuzJe", "iYFC3Jy12OQk1SbhLYFlEufzk4KXIvUMuS44tp0E");
+    Parse.serverURL = "https://parseapi.back4app.com/";
+
+    async function createRoom() {
+      const roomName = document.getElementById("roomName").value.trim();
+      const userName = document.getElementById("userName").value.trim();
+
+      if (!roomName || !userName) {
+        alert("من فضلك املأ كل الحقول");
+        return;
+      }
+
+      const roomID = Math.random().toString(36).substr(2, 8); // ID عشوائي
+      const Room = Parse.Object.extend("Rooms");
+      const newRoom = new Room();
+
+      newRoom.set("roomName", roomName);
+      newRoom.set("ownerName", userName);
+      newRoom.set("roomID", roomID);
+
+      try {
+        await newRoom.save();
+        window.location.href = `chat.html?roomID=${roomID}&user=${encodeURIComponent(userName)}`;
+      } catch (error) {
+        alert("حدث خطأ أثناء إنشاء الغرفة");
+        console.error(error);
+      }
+    }
+  </script>
+</head>
+<body>
+  <!-- 🔙 السهم في الزاوية -->
+<a href="javascript:history.back()" class="back-arrow">
+  &#8592;
+</a>
+  <h1>🧟‍♂️ إنشاء غرفة شات</h1>
+
+  <div class="container">
+    <input type="text" id="roomName" placeholder="اسم الغرفة">
+    <input type="text" id="userName" placeholder="اسمك">
+    <button onclick="createRoom()">🔑 إنشاء ودخول الغرفة</button>
+  </div>
+</body>
+</html>
